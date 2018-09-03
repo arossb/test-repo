@@ -1,7 +1,7 @@
 {
   "name": "Brian's Subscription Via SMS templates",
-  "description": "This is a Subscription Via SMS Template",
-  "author": "Brian",
+  "description": "",
+  "author": "",
   "version": "1.5.10",
   "collections": [
     {
@@ -11,6 +11,45 @@
       "introText": "**`SUBSCRIBE TO GROUPS VIA SMS`**\r\nAutomatically **ADD** members to Groups via SMS whenver they send a message with the **JOIN KEYWORD**\r\nMembers can **LEAVE** automatically whenere the **LEAVE KEYWORD** is sent",
       "visualizations": [],
       "recipes": [
+        {
+          "name": "Another Recipe ",
+          "id": 2,
+          "collectionRole": "Another Recipe",
+          "enabled": true,
+          "description": "",
+          "triggers": [],
+          "conditions": [
+            {
+              "type": "ContactFieldEqualsRule",
+              "data": {
+                "fieldName": "",
+                "valueToCompare": "",
+                "recipients": {
+                  "contacts": [],
+                  "groups": [],
+                  "smartGroups": [],
+                  "expressions": [
+                    "${trigger.sourceNumber}"
+                  ],
+                  "addresses": [],
+                  "contacts_missing_mobile": []
+                },
+                "operator": "STARTS_WITH"
+              }
+            }
+          ],
+          "actions": [
+            {
+              "type": "AddNumericRecipeCollectionStatisticAction",
+              "data": {
+                "groupIdentifier": "",
+                "statisticKey": "",
+                "statisticValue": ""
+              }
+            }
+          ],
+          "elseActions": []
+        },
         {
           "name": "Incoming Sms ",
           "id": 1,
@@ -66,77 +105,6 @@
                 }
               }
             },
-            {
-              "type": "TriggerRecipeAction",
-              "data": {
-                "recipeToTriggerId": 2,
-                "delayTimeUnit": "SECONDS",
-                "delayLength": "0"
-              }
-            },
-            {
-              "type": "UpdateGroupMembershipAction",
-              "data": {
-                "groupNames": "fsms",
-                "recipients": {
-                  "contacts": [],
-                  "groups": [],
-                  "smartGroups": [],
-                  "expressions": [
-                    "${trigger.sourceNumber}"
-                  ],
-                  "addresses": [],
-                  "contacts_missing_mobile": []
-                },
-                "operation": "REMOVE"
-              }
-            },
-            {
-              "type": "SendMessageAction",
-              "data": {
-                "messageText": "${userData['leave_message']}",
-                "connectionName": "routing.rules",
-                "sendAsBulkMessage": false,
-                "recipients": {
-                  "contacts": [],
-                  "groups": [],
-                  "smartGroups": [],
-                  "expressions": [
-                    "${trigger.sourceNumber}"
-                  ],
-                  "addresses": [],
-                  "contacts_missing_mobile": []
-                }
-              }
-            }
-          ],
-          "elseActions": []
-        },
-        {
-          "name": "Leave Message ",
-          "id": 2,
-          "collectionRole": "Leave Message",
-          "enabled": false,
-          "description": "This recipe removes a user from the group that they are in and sends a message letting them know that they have left a group",
-          "triggers": [
-            {
-              "type": "RECIPE",
-              "data": {
-                "callingRecipeIds": [
-                  1
-                ]
-              }
-            }
-          ],
-          "conditions": [
-            {
-              "type": "MessageTextContainsRule",
-              "data": {
-                "messageContainsText": "${userData['leave_keyword']}"
-              }
-            }
-          ],
-          "actions": [
             {
               "type": "UpdateGroupMembershipAction",
               "data": {
