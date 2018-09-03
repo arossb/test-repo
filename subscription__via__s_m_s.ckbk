@@ -1,0 +1,262 @@
+{
+  "name": "Brian's Subscription Via SMS templates",
+  "description": "This is a Subscription Via SMS Template",
+  "author": "Brian",
+  "version": "1.5.10",
+  "collections": [
+    {
+      "name": "Brian's Subscription Via SMS templates",
+      "type": "Subscription Via SMS",
+      "shortDescription": "This is an Automatic Subscription to a Group via SMS",
+      "introText": "**`SUBSCRIBE TO GROUPS VIA SMS`**\r\nAutomatically **ADD** members to Groups via SMS whenver they send a message with the **JOIN KEYWORD**\r\nMembers can **LEAVE** automatically whenere the **LEAVE KEYWORD** is sent",
+      "visualizations": [],
+      "recipes": [
+        {
+          "name": "Incoming Sms ",
+          "id": 1,
+          "collectionRole": "Incoming SMS",
+          "enabled": true,
+          "description": "This Recipe Adds People into a Specific group if it contains the specific keyword. It also prompts for the right, matching keyword should it not meet any of the listed keywords.",
+          "triggers": [
+            {
+              "type": "TEXT_MESSAGE"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "MessageTextContainsRule",
+              "data": {
+                "messageContainsText": "${userData['join_keyword']}"
+              }
+            }
+          ],
+          "actions": [
+            {
+              "type": "UpdateGroupMembershipAction",
+              "data": {
+                "groupNames": "fsms",
+                "recipients": {
+                  "contacts": [],
+                  "groups": [],
+                  "smartGroups": [],
+                  "expressions": [
+                    "${trigger.sourceNumber}"
+                  ],
+                  "addresses": [],
+                  "contacts_missing_mobile": []
+                },
+                "operation": "ADD"
+              }
+            },
+            {
+              "type": "SendMessageAction",
+              "data": {
+                "messageText": "${userData['welcome_message']}",
+                "connectionName": "routing.rules",
+                "sendAsBulkMessage": false,
+                "recipients": {
+                  "contacts": [],
+                  "groups": [],
+                  "smartGroups": [],
+                  "expressions": [
+                    "${trigger.sourceNumber}"
+                  ],
+                  "addresses": [],
+                  "contacts_missing_mobile": []
+                }
+              }
+            },
+            {
+              "type": "TriggerRecipeAction",
+              "data": {
+                "recipeToTriggerId": 2,
+                "delayTimeUnit": "SECONDS",
+                "delayLength": "0"
+              }
+            },
+            {
+              "type": "UpdateGroupMembershipAction",
+              "data": {
+                "groupNames": "fsms",
+                "recipients": {
+                  "contacts": [],
+                  "groups": [],
+                  "smartGroups": [],
+                  "expressions": [
+                    "${trigger.sourceNumber}"
+                  ],
+                  "addresses": [],
+                  "contacts_missing_mobile": []
+                },
+                "operation": "REMOVE"
+              }
+            },
+            {
+              "type": "SendMessageAction",
+              "data": {
+                "messageText": "${userData['leave_message']}",
+                "connectionName": "routing.rules",
+                "sendAsBulkMessage": false,
+                "recipients": {
+                  "contacts": [],
+                  "groups": [],
+                  "smartGroups": [],
+                  "expressions": [
+                    "${trigger.sourceNumber}"
+                  ],
+                  "addresses": [],
+                  "contacts_missing_mobile": []
+                }
+              }
+            }
+          ],
+          "elseActions": []
+        },
+        {
+          "name": "Leave Message ",
+          "id": 2,
+          "collectionRole": "Leave Message",
+          "enabled": false,
+          "description": "This recipe removes a user from the group that they are in and sends a message letting them know that they have left a group",
+          "triggers": [
+            {
+              "type": "RECIPE",
+              "data": {
+                "callingRecipeIds": [
+                  1
+                ]
+              }
+            }
+          ],
+          "conditions": [
+            {
+              "type": "MessageTextContainsRule",
+              "data": {
+                "messageContainsText": "${userData['leave_keyword']}"
+              }
+            }
+          ],
+          "actions": [
+            {
+              "type": "UpdateGroupMembershipAction",
+              "data": {
+                "groupNames": "fsms",
+                "recipients": {
+                  "contacts": [],
+                  "groups": [],
+                  "smartGroups": [],
+                  "expressions": [
+                    "${trigger.sourceNumber}"
+                  ],
+                  "addresses": [],
+                  "contacts_missing_mobile": []
+                },
+                "operation": "REMOVE"
+              }
+            },
+            {
+              "type": "SendMessageAction",
+              "data": {
+                "messageText": "${userData['leave_message']}",
+                "connectionName": "routing.rules",
+                "sendAsBulkMessage": false,
+                "recipients": {
+                  "contacts": [],
+                  "groups": [],
+                  "smartGroups": [],
+                  "expressions": [
+                    "${trigger.sourceNumber}"
+                  ],
+                  "addresses": [],
+                  "contacts_missing_mobile": []
+                }
+              }
+            }
+          ],
+          "elseActions": []
+        }
+      ],
+      "userData": [
+        {
+          "key": "select_contact",
+          "recipientValue": {
+            "contacts": [
+              "+699699699"
+            ],
+            "groups": [],
+            "smartGroups": [],
+            "expressions": [],
+            "addresses": [],
+            "contacts_missing_mobile": []
+          },
+          "type": "ContactSelectionUserDefinedProperty",
+          "userFriendlyName": "Select Contact",
+          "description": "Select one Contact or a group of contacts that you would like to join or be a part of the group",
+          "userConfigState": "BASIC_CONFIG",
+          "isRequired": true
+        },
+        {
+          "key": "join_keyword",
+          "isRequired": true,
+          "placeholderText": "Enter Join Keyword or a List of comma separated keywords",
+          "stringValue": "join",
+          "type": "StringUserDefinedProperty",
+          "userFriendlyName": "Join Keyword",
+          "description": "Enter One or a List of Comma Separated **JOIN KEYWORDS**. \r\n#One Join Keyword (**karibu**)\r\n#Multiple join Keywords separated by a comma (**join, enter, karibu**)",
+          "userConfigState": "BASIC_CONFIG"
+        },
+        {
+          "key": "welcome_message",
+          "placeholderText": "Welcome Message",
+          "longTextValue": "karibu member",
+          "type": "LongTextUserDefinedProperty",
+          "userFriendlyName": "Welcome Message",
+          "description": "Enter the message welcoming members to the Group.",
+          "userConfigState": "BASIC_CONFIG",
+          "isRequired": true
+        },
+        {
+          "key": "leave_keyword",
+          "isRequired": true,
+          "placeholderText": "Enter Leave Keyword or a List of comma separated keywords",
+          "stringValue": "leave",
+          "type": "StringUserDefinedProperty",
+          "userFriendlyName": "Leave Keyword",
+          "description": "Enter One or a List of Comma Separated **LEAVE KEYWORDS**\r\n#One Leave Keyword (**Leave**)\r\n#Multiple Leave Keywords separated by a comma (**Leave, kwaheri, stop**)",
+          "userConfigState": "BASIC_CONFIG"
+        },
+        {
+          "key": "leave_message",
+          "placeholderText": "Leave Message",
+          "longTextValue": "sad to see you leave",
+          "type": "LongTextUserDefinedProperty",
+          "userFriendlyName": "Leave Message",
+          "description": "Message informing member that they have left Group.",
+          "userConfigState": "BASIC_CONFIG",
+          "isRequired": true
+        },
+        {
+          "key": "top_level_keyword",
+          "isRequired": true,
+          "placeholderText": "",
+          "stringValue": "Top Level Keyword",
+          "type": "StringUserDefinedProperty",
+          "userFriendlyName": "",
+          "description": "",
+          "userConfigState": "NON_CONFIG"
+        },
+        {
+          "key": "fallback_sms",
+          "placeholderText": "",
+          "longTextValue": "please enter the right message",
+          "type": "LongTextUserDefinedProperty",
+          "userFriendlyName": "",
+          "description": "",
+          "userConfigState": "NON_CONFIG",
+          "isRequired": true
+        }
+      ]
+    }
+  ],
+  "smartGroups": []
+}
