@@ -12,6 +12,45 @@
       "visualizations": [],
       "recipes": [
         {
+          "name": "Another Recipe ",
+          "id": 2,
+          "collectionRole": "Another Recipe",
+          "enabled": true,
+          "description": "",
+          "triggers": [],
+          "conditions": [
+            {
+              "type": "ContactFieldEqualsRule",
+              "data": {
+                "fieldName": "",
+                "valueToCompare": "",
+                "recipients": {
+                  "contacts": [],
+                  "groups": [],
+                  "smartGroups": [],
+                  "expressions": [
+                    "${trigger.sourceNumber}"
+                  ],
+                  "addresses": [],
+                  "contacts_missing_mobile": []
+                },
+                "operator": "STARTS_WITH"
+              }
+            }
+          ],
+          "actions": [
+            {
+              "type": "AddNumericRecipeCollectionStatisticAction",
+              "data": {
+                "groupIdentifier": "",
+                "statisticKey": "",
+                "statisticValue": ""
+              }
+            }
+          ],
+          "elseActions": []
+        },
+        {
           "name": "Incoming Sms ",
           "id": 1,
           "collectionRole": "Incoming SMS",
