@@ -1,7 +1,7 @@
 {
   "name": "Brian's Subscription Via SMS templates",
   "description": "",
-  "author": "",
+  "author": "Brian",
   "version": "1.5.10",
   "collections": [
     {
@@ -48,6 +48,17 @@
               }
             }
           ],
+          "elseActions": []
+        },
+        {
+          "name": "Brian Gladys Recipe",
+          "id": 3,
+          "collectionRole": "Brian Gladys Recipe",
+          "enabled": true,
+          "description": "",
+          "triggers": [],
+          "conditions": [],
+          "actions": [],
           "elseActions": []
         },
         {
